@@ -1,0 +1,7 @@
+name = "BayeredImages"
+uuid = "f1ec69b2-2eff-4ddc-91c0-bbce45477d89"
+authors = ["Brandon Flores <bsflores@wisc.edu> and contributors"]
+version = "0.1.0-dev"
+
+[compat]
+julia = "1.10"
