@@ -83,7 +83,7 @@ Base.summary(io::IO, cfa::BayerCFA) = print(io, "Bayer color filter array (", St
 #---Fast transforms of a Bayer matrix--------------------------------------------------------------#
 
 # reflection across a diagonal
-function _transpose(cfa::BayerCFA)
+function _permutedims(cfa::BayerCFA)
     # some fun bit twiddling
     data = cfa.data & 0b11000011
     i2 = (cfa.data & 0b00110000) >> 0x2
@@ -91,8 +91,9 @@ function _transpose(cfa::BayerCFA)
     return BayerCFA(data | i2 | i3)
 end
 
-Base.transpose(cfa::BayerCFA) = _transpose(cfa)
-Base.adjoint(cfa::BayerCFA) = _transpose(cfa)
+Base.transpose(cfa::BayerCFA) = _permutedims(cfa)
+Base.adjoint(cfa::BayerCFA) = _permutedims(cfa)
+Base.permutedims(cfa::BayerCFA) = _permutedims(cfa)
 
 # reflection along axes
 function _reverse(cfa::BayerCFA, dim::Integer)
@@ -119,4 +120,3 @@ end
 _reverse(cfa::BayerCFA, ::Colon) = _reverse(_reverse(cfa, 1), 2)
 
 Base.reverse(cfa::BayerCFA; dims=:) = _reverse(cfa, dims)
-
