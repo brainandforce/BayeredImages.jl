@@ -42,8 +42,9 @@ end
 
 """
     BayerCFA(spec::AbstractString)
+    BayerCFA(spec::Symbol)
 
-Constructs a Bayer CFA matrix from a string specifier.
+Constructs a Bayer CFA matrix from a string specifier, either an `AbstractString` or `Symbol`.
 
 Bayer matrices are commonly described in a string, such as "GBRG".
 This string represents the matrix layout in a row-first order, so this string maps to
@@ -56,7 +57,14 @@ Note that Julia matrices, including `ColorFilterArray`, are represented in a col
 # Examples
 ```julia-repl
 julia> BayerCFA("GRBG")
+Bayer color filter array (GRBG):
+ 0x02  0x01
+ 0x03  0x02
 
+julia> BayerCFA(:RGGB)
+Bayer color filter array (RGGB):
+ 0x01  0x02
+ 0x02  0x03
 ```
 """
 function BayerCFA(spec::AbstractString)
