@@ -120,3 +120,17 @@ end
 _reverse(cfa::BayerCFA, ::Colon) = _reverse(_reverse(cfa, 1), 2)
 
 Base.reverse(cfa::BayerCFA; dims=:) = _reverse(cfa, dims)
+
+function Base.circshift(::BayerCFA, ::Tuple{Vararg{Integer,N}}) where N
+    throw(ArgumentError("input tuple of length $N, requested 2 or less"))
+end
+
+function Base.circshift(cfa::BayerCFA, shift::Tuple{Integer,Integer})
+    cfa = ifelse(isodd(shift[1]), _reverse(cfa, 1), cfa)
+    cfa = ifelse(isodd(shift[2]), _reverse(cfa, 2), cfa)
+    return cfa
+end
+
+Base.circshift(cfa::BayerCFA, shift::Integer) = circshift(cfa, (shift, zero(shift)))
+Base.circshift(cfa::BayerCFA, shift::Tuple{Integer}) = circshift(cfa, only(shift))
+Base.circshift(cfa::BayerCFA, ::Tuple{}) = cfa
