@@ -93,3 +93,30 @@ end
 
 Base.transpose(cfa::BayerCFA) = _transpose(cfa)
 Base.adjoint(cfa::BayerCFA) = _transpose(cfa)
+
+# reflection along axes
+function _reverse(cfa::BayerCFA, dim::Integer)
+    if dim == 1
+        r1 = (cfa.data & 0b00110011) << 0x2
+        r2 = (cfa.data & 0b11001100) >> 0x2
+        return BayerCFA(r1 | r2)
+    elseif dim == 2
+        c1 = (cfa.data & 0b00001111) << 0x4
+        c2 = (cfa.data & 0b11110000) >> 0x4
+        return BayerCFA(c1 | c2)
+    end
+    throw(ArgumentError("invalid dimension $dim in reverse"))
+end
+
+_reverse(cfa::BayerCFA, ::Tuple{}) = cfa
+_reverse(cfa::BayerCFA, dims::Tuple{Integer}) = _reverse(cfa, only(dims))
+_reverse(cfa::BayerCFA, dims::Tuple{Integer,Integer}) = _reverse(_reverse(cfa, dims[1]), dims[2])
+
+function _reverse(::BayerCFA, dims::Tuple{Vararg{Integer}})
+    throw(ArgumentError("invalid dimensions $dims in reverse"))
+end
+
+_reverse(cfa::BayerCFA, ::Colon) = _reverse(_reverse(cfa, 1), 2)
+
+Base.reverse(cfa::BayerCFA; dims=:) = _reverse(cfa, dims)
+
