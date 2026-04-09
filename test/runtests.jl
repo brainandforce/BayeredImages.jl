@@ -14,5 +14,5 @@ const XTRANS_CFA = SMatrix{6,6,UInt8}(
 )
 
 @testset "BayeredImages.jl" begin
-    # Write your tests here.
+    include("bayer.jl")
 end
