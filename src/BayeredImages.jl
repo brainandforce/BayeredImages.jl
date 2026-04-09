@@ -1,5 +1,7 @@
 module BayeredImages
 
+using Base: @propagate_inbounds
+
 include("cfa.jl")
 export ColorFilterArray
 include("bayer.jl")
