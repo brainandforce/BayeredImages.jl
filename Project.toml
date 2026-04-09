@@ -1,7 +1,14 @@
 name = "BayeredImages"
 uuid = "f1ec69b2-2eff-4ddc-91c0-bbce45477d89"
-authors = ["Brandon Flores <bsflores@wisc.edu> and contributors"]
 version = "0.1.0-dev"
+authors = ["Brandon Flores <bsflores@wisc.edu> and contributors"]
+
+[weakdeps]
+ImageFiltering = "6a3955dd-da59-5b1f-98d4-e7296123deb5"
+
+[extensions]
+BayeredImagesImageFilteringExt = "ImageFiltering"
 
 [compat]
+ImageFiltering = "0.7.12"
 julia = "1.10"
