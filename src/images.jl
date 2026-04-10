@@ -35,10 +35,17 @@ ColorFilterArray(ci::CFAImage) = ci.cfa
 
 #---Transforming images while preserving the CFA arrangement---------------------------------------#
 
-#= TODO: ensure that the offsets are handled correctly
-Base.reverse!(ci::CFAImage, dims) = CFAImage(reverse(ci.cfa, dims), reverse!(ci.image, dims))
-Base.reverse(ci::CFAImage, dims) = CFAImage(reverse(ci.cfa, dims), reverse(ci.image, dims))
-=#
+function Base.reverse(ci::CFAImage; dims = :)
+    cfa = ColorFilterArray(ci)
+    reversed_cfa = reverse(circshift(cfa, mod.(size(ci), size(cfa))); dims)
+    return CFAImage(reversed_cfa, reverse(ci.image; dims))
+end
+
+function Base.reverse!(ci::CFAImage; dims = :)
+    cfa = ColorFilterArray(ci)
+    reversed_cfa = reverse(circshift(cfa, mod.(size(ci), size(cfa))); dims)
+    return CFAImage(reversed_cfa, reverse!(ci.image; dims))
+end
 
 #= TODO: handle cases where the image dimensions do not divide the CFA dimensions
 function Base.circshift(ci::CFAImage, shifts)
