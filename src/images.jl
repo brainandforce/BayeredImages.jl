@@ -30,6 +30,9 @@ Base.IndexStyle(::Type{CFAImage{<:ColorFilterArray,<:Any,M}}) where M = IndexSty
     return CFAImage(circshift(ci.cfa, first.((i, j)) .- (true, true)), ci.image[i, j])
 end
 
+ColorFilterArray(ci::CFAImage) = ci.cfa
+(::Type{C})(ci::CFAImage{C}) where C = ci.cfa
+
 #---Transforming images while preserving the CFA arrangement---------------------------------------#
 
 #= TODO: ensure that the offsets are handled correctly
@@ -43,3 +46,10 @@ end
 =#
 
 Base.permutedims(ci::CFAImage) = CFAImage(permutedims(ci.cfa), permutedims(ci.image))
+
+#---Pretty printing--------------------------------------------------------------------------------#
+
+function Base.summary(io::IO, bi::BayeredImage)
+    join(io, size(bi), '×')
+    print(io, ' ', String(BayerCFA(bi)), ' ', typeof(bi))
+end
