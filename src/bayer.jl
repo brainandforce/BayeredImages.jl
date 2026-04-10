@@ -85,8 +85,6 @@ function Base.getindex(cfa::BayerCFA, i::Int)
 end
 
 Base.String(cfa::BayerCFA) = join(('X', 'R', 'G', 'B')[n+1] for n in cfa[[1,3,2,4]])
-Base.show(io::IO, cfa::BayerCFA) = print(io, typeof(cfa), "(\"", String(cfa), "\")") 
-Base.summary(io::IO, cfa::BayerCFA) = print(io, "Bayer color filter array (", String(cfa), ")")
 
 #---Fast transforms of a Bayer matrix--------------------------------------------------------------#
 
@@ -142,3 +140,8 @@ end
 Base.circshift(cfa::BayerCFA, shift::Integer) = circshift(cfa, (shift, zero(shift)))
 Base.circshift(cfa::BayerCFA, shift::Tuple{Integer}) = circshift(cfa, only(shift))
 Base.circshift(cfa::BayerCFA, ::Tuple{}) = cfa
+
+#---Pretty printing--------------------------------------------------------------------------------#
+
+Base.show(io::IO, cfa::BayerCFA) = print(io, typeof(cfa), "(\"", String(cfa), "\")") 
+Base.summary(io::IO, cfa::BayerCFA) = print(io, "Bayer color filter array (", String(cfa), ")")
