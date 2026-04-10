@@ -31,7 +31,7 @@ Base.IndexStyle(::Type{CFAImage{<:ColorFilterArray,<:Any,M}}) where M = IndexSty
 end
 
 ColorFilterArray(ci::CFAImage) = ci.cfa
-(::Type{C})(ci::CFAImage{C}) where C = ci.cfa
+(::Type{C})(ci::CFAImage{C}) where C<:ColorFilterArray = ci.cfa
 
 #---Transforming images while preserving the CFA arrangement---------------------------------------#
 
