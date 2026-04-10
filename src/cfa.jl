@@ -7,6 +7,14 @@ green, and blue channels.
 In principle, custom types can use all possible `UInt8` values to refer to up to 128 different
 channels per sensor.
 
+# Indexing
+
+When linearly indexed, the valid indices of a `ColorFilterArray{D}` range from 1 to `D^2`.
+Multidimensional indices are treated as periodic, and will be remapped with `mod1`.
+This is done intentionally, because a multidimensional index of an image can always be mapped back
+to the color filter array without any extra information, but a linear index cannot without more
+information about the size of the image.
+
 # Extended Help
 
 ## Implementing a custom ColorFilterArray type
@@ -26,8 +34,18 @@ end
 Base.size(::ColorFilterArray{D}) where D = tuple(D,D)
 Base.IndexStyle(::Type{<:ColorFilterArray}) = IndexLinear()
 
-function Base.getindex(cfa::ColorFilterArray{D}, i1::Int, i2::Int) where D
-    return @inbounds getindex(cfa, LinearIndices(cfa)[mod1(i1, D), mod1(i2, D)])
+# Define these with respect to the type
+Base.eachindex(::IndexLinear, ::ColorFilterArray{D}) where D = Base.OneTo(D^2)
+Base.eachindex(::IndexCartesian, ::ColorFilterArray{D}) where D = CartesianIndices((D, D))
+
+function Base.getindex(cfa::ColorFilterArray{D}, inds::Vararg{Int,2}) where D
+    return @inbounds getindex(cfa, LinearIndices(cfa)[mod1.(inds, D)...])
+end
+
+Base.getindex(cfa::ColorFilterArray, inds::Vararg{Int}) = throw(BoundsError(cfa, inds))
+
+function Base.getindex(cfa::ColorFilterArray, i::Union{Integer,CartesianIndex}...)
+    return getindex(cfa, to_indices(cfa, i)...)
 end
 
 """
