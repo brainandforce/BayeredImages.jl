@@ -47,6 +47,13 @@ end
 
 Base.permutedims(ci::CFAImage) = CFAImage(permutedims(ci.cfa), permutedims(ci.image))
 
+#---Arithmetic operations--------------------------------------------------------------------------#
+
+Base.:*(ci::CFAImage, x::Number) = CFAImage(ColorFilterArray(ci), ci.image * x)
+Base.:*(x::Number, ci::CFAImage) = CFAImage(ColorFilterArray(ci), x * ci.image)
+Base.:/(ci::CFAImage, x::Number) = CFAImage(ColorFilterArray(ci), ci.image / x)
+Base.:\(x::Number, ci::CFAImage) = CFAImage(ColorFilterArray(ci), x \ ci.image)
+
 #---Pretty printing--------------------------------------------------------------------------------#
 
 function Base.summary(io::IO, bi::BayeredImage)
