@@ -22,7 +22,7 @@ function BayerCFA(hdu::HDU)
     return BayerCFA(first(bayerpat))
 end
 
-BayerCFA(fits::FITS, index = 1) = BayerCFA(fits[index])
+BayerCFA(fits::FITS, hduindex = 1) = BayerCFA(fits[hduindex])
 
 function BayeredImage(hdu::ImageHDU)
     cfa = try
