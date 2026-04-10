@@ -6,6 +6,19 @@ The channels are enumerated by `UInt8` data, with `0x1`, `0x2`, and `0x3` corres
 green, and blue channels.
 In principle, custom types can use all possible `UInt8` values to refer to up to 128 different
 channels per sensor.
+
+# Extended Help
+
+## Implementing a custom ColorFilterArray type
+
+The default implentation of certain array operations that should return a `ColorFilterArray`
+returns a `Matrix{UInt8}` instead.
+These functions include:
+  * `Base.reverse`
+  * `Base.permutedims`
+  * `Base.circshift`
+When implementing a `ColorFilterArray` type, these output types of these functions should match
+the input type.
 """
 abstract type ColorFilterArray{D} <: AbstractMatrix{UInt8}
 end
