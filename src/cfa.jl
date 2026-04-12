@@ -31,7 +31,12 @@ the input type.
 abstract type ColorFilterArray{D} <: AbstractMatrix{UInt8}
 end
 
-Base.size(::ColorFilterArray{D}) where D = tuple(D,D)
+function Base.size(::Type{<:ColorFilterArray{D}}) where D
+    D isa Integer || throw(TypeError(:size, Integer, typeof(D)))
+    return tuple(Int(D), Int(D))
+end
+
+Base.size(cfa::ColorFilterArray) = size(typeof(cfa))
 Base.IndexStyle(::Type{<:ColorFilterArray}) = IndexLinear()
 
 # Define these with respect to the type
