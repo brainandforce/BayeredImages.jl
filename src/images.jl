@@ -33,6 +33,10 @@ end
 ColorFilterArray(ci::CFAImage) = ci.cfa
 (::Type{C})(ci::CFAImage{C}) where C<:ColorFilterArray = ci.cfa
 
+# Needed to resolve method ambiguities
+GenericCFA{D}(ci::CFAImage{C}) where {D,C<:GenericCFA{D}} = ci.cfa
+GenericCFA{D,M}(ci::CFAImage{C}) where {D,M,C<:GenericCFA{D,M}} = ci.cfa
+
 #---Getting data from each color channel-----------------------------------------------------------#
 """
     get_color_channel(ci::CFAImage, channel::Integer, [default = zero(eltype(ci))])
