@@ -33,6 +33,24 @@ end
 ColorFilterArray(ci::CFAImage) = ci.cfa
 (::Type{C})(ci::CFAImage{C}) where C<:ColorFilterArray = ci.cfa
 
+#---Getting data from each color channel-----------------------------------------------------------#
+"""
+    get_color_channel(ci::CFAImage, channel::Integer, [default = zero(eltype(ci))])
+
+Extracts the pixels that correspond to the selected color channel.
+Pixels not matching the color channel are set to the value `default`.
+If the image does not contain data associated with a color channel, an array of `default` is
+returned.
+"""
+function get_color_channel(ci::CFAImage, channel::Integer, default = zero(eltype(ci)))
+    result = similar(ci.image)
+    cfa = ColorFilterArray(ci)
+    for (n,i) in enumerate(CartesianIndices(ci))
+        result[n] = ifelse(cfa[i] == channel, ci[n], default)
+    end
+    return result
+end
+
 #---Transforming images while preserving the CFA arrangement---------------------------------------#
 
 function Base.reverse(ci::CFAImage; dims = :)
