@@ -3,7 +3,7 @@ module BayeredImages
 using Base: @propagate_inbounds
 
 include("cfa.jl")
-export ColorFilterArray
+export ColorFilterArray, GenericCFA
 include("bayer.jl")
 export BayerCFA
 #=

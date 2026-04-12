@@ -68,3 +68,43 @@ function _channel_to_uint8(c::Char)
 end
 
 _channel_to_uint8(s::AbstractString) = _channel_to_uint8(first(s))
+
+#---Generic color filter array type----------------------------------------------------------------#
+"""
+    GenericCFA{D,M<:AbstractMatrix{UInt8}} <: ColorFilterArray{D}
+
+Stores a color filter array of linear size `D` in a matrix of type `M`.
+This function can be used to represent color filter arrays that don't have a dedicated type.
+"""
+struct GenericCFA{D,M<:AbstractMatrix{UInt8}} <: ColorFilterArray{D}
+    matrix::M
+    function GenericCFA{D,M}(matrix) where {D,M}
+        sz = size(matrix)
+        sz === (D,D) || throw(
+            DimensionMismatch("matrix must have size ($D, $D), got $sz")
+        )
+        return new(matrix)
+    end
+end
+
+GenericCFA{D}(matrix::M) where {D,M<:AbstractMatrix{UInt8}} = GenericCFA{D,M}(matrix)
+GenericCFA{D}(matrix::AbstractMatrix{<:Integer}) where D = GenericCFA{D}(convert.(UInt8, matrix))
+
+@propagate_inbounds Base.getindex(cfa::GenericCFA, i::Int) = cfa.matrix[i]
+
+function Base.reverse!(cfa::GenericCFA; dims = :)
+    reverse!(cfa.matrix; dims)
+    return cfa
+end
+
+Base.reverse(cfa::T; dims = :) where T<:GenericCFA = T(reverse(cfa.matrix; dims))
+Base.permutedims(cfa::T) where T<:GenericCFA = T(permutedims(cfa.matrix))
+
+function Base.circshift!(cfa::GenericCFA, shifts)
+    circshift!(cfa, shifts)
+    return cfa
+end
+
+function Base.circshift(cfa::T, shifts::NTuple{N,Integer}) where {N,T<:GenericCFA}
+    return T(circshift(cfa.matrix, shifts))
+end
