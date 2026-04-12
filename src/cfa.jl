@@ -43,6 +43,9 @@ Base.IndexStyle(::Type{<:ColorFilterArray}) = IndexLinear()
 Base.eachindex(::IndexLinear, ::ColorFilterArray{D}) where D = Base.OneTo(D^2)
 Base.eachindex(::IndexCartesian, ::ColorFilterArray{D}) where D = CartesianIndices((D, D))
 
+# Don't check bounds when using Cartesian indexing because the array is periodic
+Base.checkbounds(::Type{Bool}, ::ColorFilterArray, i1, i2) = true
+
 function Base.getindex(cfa::ColorFilterArray{D}, inds::Vararg{Int,2}) where D
     return @inbounds getindex(cfa, LinearIndices(cfa)[mod1.(inds, D)...])
 end
