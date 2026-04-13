@@ -13,8 +13,8 @@ export XTransCFA
 include("images.jl")
 export CFAImage, BayeredImage
 export get_color_channel
-#=
 include("demosaicing.jl")
-=#
+export DemosaicAlgorithm, BilinearDemosaic
+export demosaic
 
 end
