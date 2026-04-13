@@ -4,6 +4,12 @@
 
 Supertype for all algorithms used to demosaic a raw color image.
 Subtypes should include any needed parameters for executing the algorithm as fields.
+
+To implement a demosaicing algorithm, add a method of the form 
+```
+BayeredImages.demosaic(alg::DA, image::CFAImage{C})
+```
+where `DA` is your subtype of `DemosaicAlgorithm`, and `C` is a subtype of `ColorFilterArray`.
 """
 abstract type DemosaicAlgorithm
 end
