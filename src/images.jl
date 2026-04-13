@@ -17,6 +17,9 @@ Alias for [`CFAImage{BayerCFA,T,M}`](@ref).
 const BayeredImage{T,M<:AbstractMatrix{T}} = CFAImage{BayerCFA,T,M}
 
 CFAImage{C}(cfa, image::M) where {C,T,M<:AbstractMatrix{T}} = CFAImage{C,T,M}(cfa, image)
+# Swap the specified color filter array
+CFAImage{C}(cfa::ColorFilterArray, ci::CFAImage{C}) where C = CFAImage{C}(cfa, ci.image)
+CFAImage(cfa::C, ci::CFAImage{C}) where C<:ColorFilterArray = CFAImage{C}(cfa, ci.image)
 
 Base.size(ci::CFAImage) = size(ci.image)
 Base.IndexStyle(::Type{CFAImage{<:ColorFilterArray,<:Any,M}}) where M = IndexStyle(M)
